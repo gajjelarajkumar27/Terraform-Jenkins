@@ -4,9 +4,9 @@ provider "aws" {
 }
 
 resource "aws_instance" "nginx_server" {
-  ami           = "ami-0c02fb55956c7d316"  # Amazon Linux 2 AMI
+  ami           = "ami-020cba7c55df1f615"  # Amazon Linux 2 AMI
   instance_type = "t2.micro"
-  key_name      = "your-key-name"  # Replace with your actual EC2 key pair name
+  key_name      = "k8s"  # Replace with your actual EC2 key pair name
 
   user_data = <<-EOF
               #!/bin/bash

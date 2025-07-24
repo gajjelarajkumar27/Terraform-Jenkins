@@ -1,7 +1,7 @@
 
 pipeline {
     parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        booleanParam(name: 'autoApprove', defaultValue: true, description: 'Automatically run apply after generating plan?')
     }
 
     environment {
@@ -14,19 +14,19 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    dir('terraform') {
-                        git branch: 'main', url: 'https://github.com/gajjelarajkumar27/Terraform-Jenkins.git'
-                    }
+                dir('terraform') {
+                    git branch: 'main', url: 'https://github.com/gajjelarajkumar27/Terraform-Jenkins.git'
                 }
             }
         }
 
         stage('Plan') {
             steps {
-                sh 'cd terraform && terraform init'
-                sh 'cd terraform && terraform plan -out=tfplan'
-                sh 'cd terraform && terraform show -no-color tfplan > tfplan.txt'
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform plan -out=tfplan'
+                    sh 'terraform show -no-color tfplan > tfplan.txt'
+                }
             }
         }
 
@@ -47,7 +47,9 @@ pipeline {
 
         stage('Apply') {
             steps {
-                sh 'cd terraform && terraform apply -input=false tfplan'
+                dir('terraform') {
+                    sh 'terraform apply -input=false tfplan'
+                }
             }
         }
     }
